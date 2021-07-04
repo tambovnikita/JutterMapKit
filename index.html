@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JutterMapKit</title>
+    <link rel="stylesheet" href="theme.css">    <!--подключаем стили-->
+    <!--используем (v-cloak)-->
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<!--задаём общую область-->    <!--id="app" создаёт привязку div к Vue-->
+<div class="container" id="app" v-cloak>    <!--(v-cloak) позволяет избежать отображения на экране промежуточных состояний-->
+    <div class="title"> <!--область с названием-->
+        <h1>{{ title }}</h1>
+    </div>
+    <br/>   <!--отступ-->
+    <div class="MapAndBtnsCreate"> <!--область, в которой будут находиться кнопки построения и карта-->
+        <div class="btnsCreate">    <!--область с кнопками-редактирования-->
+            <hr>
+            <button class="btnCreate"></button>
+            <hr>
+            <button class="btnCreate"></button>
+            <hr>
+            <button class="btnCreate"></button>
+            <hr>
+            <button class="btnCreate"></button>
+            <hr>
+        </div>
+        <!--окошко для карты-->
+        <!--(v-on:mouseenter) когда мышь входит в области окошка карты-->
+        <!--(v-on:mouseout) когда мышь выходит в области окошка карты-->
+        <!--(v-on:mousemove) когда мышь двигается в области окошка карты-->
+        <!--(v-on:wheel) когда крутится колёсико мыши в области окошка карты-->
+        <div class="mapBorders"
+             v-on:mouseenter="mouseInOutMap=true"
+             v-on:mouseout="mouseInOutMap=false"
+             v-on:mousemove="mouseInOutMap=true"
+             v-on:wheel="scrollInMap">
+
+            <div class="map" >   <!--область с самой картой (рабочая область)-->
+                <img class="map" src="img/exampleMap.png" alt="Карта загружается..."
+                     v-bind:style="{
+                        width: zoom+'%',
+                        height: zoom+'%'
+                     }">
+            </div>
+
+        </div>
+    </div>
+
+    <h2>Масштаб: {{ zoom }}</h2>
+
+</div>
+
+
+<script src="https://unpkg.com/vue@next"></script>  <!--подключаем Vue-->
+<script src="app.js"></script>  <!--подключаем js-файл к html-->
+</body>
+
+</html>

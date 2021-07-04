@@ -1,0 +1,75 @@
+
+body {  /*для всего содержимого bady*/
+    margin: 0;
+    background-color: #263940;  /*общий фон*/
+    text-align: center; /*текст всегда по центру*/
+}
+
+h1 {
+    margin: 0;  /*убираем внешний отступ у текста*/
+    color: #263940; /*цвет текста*/
+    font-family: Century Gothic;    /*шрифт текста*/
+    font-style: italic; /*стиль текста (наклонный)*/
+}
+
+h2 {
+    margin: 10px 0;  /*убираем внешний отступ у текста*/
+    color: #9eceea; /*цвет текста*/
+    font-family: Century Gothic;    /*шрифт текста*/
+    font-style: italic; /*стиль текста (наклонный)*/
+}
+
+.container {    /*основной контейнер*/
+    display: block;  /*внутреняя организация*/
+    margin: 20px 20px;  /*внешние отступы*/
+}
+
+.title { /*область заголовка*/
+    margin: auto;   /*внешний отступ (центрируем)*/
+    display: flex;  /*представление содержимого*/
+    background-color: azure; /*фон заголовка*/
+    font-size: 20px; /*размер шрифта заголовка*/
+    width: 600px; /*ширина области*/
+    height: 70px; /*высота области*/
+    border-radius: 20px; /*скругление углов*/
+    align-items: center;    /*выравнивание по горизонтали*/
+    justify-content: center;    /*выравнивание объектов по центру*/
+}
+
+.MapAndBtnsCreate {
+    display: flex;
+    background-color: #606e8d;
+    justify-content: normal;
+    border-radius: 10px; /*скругление углов*/
+}
+
+.btnsCreate {   /*область с кнопками-создания*/
+    display: block; /*блочное представление объектов*/
+    align-self: center;  /*выравнивание объектов по центру*/
+
+}
+
+.btnCreate {    /*кнопки создания какого объекта*/
+    margin: 5px 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px; /*скругление углов*/
+    background: url("./img/btn-house-create.svg");    /*фон кнопки*/
+}
+
+.mapBorders {  /*окошко для карты*/
+    margin: 0;   /*внешний отступ (центрируем)*/
+    display: block;  /*представление содержимого*/
+    height: 550px;  /*высота*/
+    width: 100%;    /*ширина*/
+    border-radius: 10px; /*скругление углов*/
+    background: url("./img/pattern.png"); /*фон поля-редактирования*/
+    align-items: center;    /*выравнивание по горизонтали*/
+    justify-items: center;  /*выравнивание объектов по центру*/
+
+    overflow: scroll;   /*появляются скроллы, когда карта выходит за границы окошка для карты*/
+}
+
+.map {  /*область с самой картой (рабочая область)*/
+
+}
