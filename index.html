@@ -22,7 +22,8 @@
     <div class="MapAndBtnsCreate"> <!--область, в которой будут находиться кнопки построения и карта-->
         <div class="btnsCreate">    <!--область с кнопками-редактирования-->
             <hr>
-            <button class="btnCreate"></button>
+            <!--при клике на кнопку начинается работа с Canvas-->
+            <button class="btnCreate" v-on:click="createInCanavas"></button>
             <hr>
             <button class="btnCreate"></button>
             <hr>
@@ -42,14 +43,15 @@
              v-on:mousemove="mouseInOutMap=true"
              v-on:wheel="scrollInMap">
 
-            <div class="map" >   <!--область с самой картой (рабочая область)-->
-                <img class="map" src="img/exampleMap.png" alt="Карта загружается..."
-                     v-bind:style="{
-                        width: zoom+'%',
-                        height: zoom+'%'
-                     }">
-            </div>
-
+<!--            <div class="map" >   &lt;!&ndash;область с самой картой (рабочая область)&ndash;&gt;-->
+<!--                <img class="map" src="img/exampleMap.png" alt="Карта загружается..."-->
+<!--                     v-bind:style="{-->
+<!--                        width: zoom+'%',-->
+<!--                        height: zoom+'%'-->
+<!--                     }">-->
+<!--            </div>-->
+            <!--Работаем с Canvas (рисование)-->
+            <canvas class="map" width="400" height="200"></canvas>  <!--width и height-разрешение (может быть 10000 на 200000)-->
         </div>
     </div>
 

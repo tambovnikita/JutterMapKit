@@ -71,5 +71,8 @@ h2 {
 }
 
 .map {  /*область с самой картой (рабочая область)*/
-
+    width: 400px;
+    height: 200px;
+    border: 3px solid black;
+    margin: 40px;
 }

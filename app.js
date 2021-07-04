@@ -3,20 +3,40 @@ const App = {   // содержимое приложения
         return {
             title: 'Создание карты', // ключ: значение
             mouseInOutMap: false,   // если курсор в области карты, то mouseInOutMap будет true, иначе false
-            zoom: 100
-
+            zoom: 100  // масштаб карты
     }},
     methods: {  // функции
+
         scrollInMap(event) { // функция выполняющаяся при кручении колёсика мыши
             if (this.mouseInOutMap) {   // если курсор мыши находися в области карты, то
-                if(event.deltaY===125) {
-                    this.zoom+=1
+                if(event.deltaY===125) {    // при прокрутке колёсика мыши вниз
+                    this.zoom++    // увеличивается масштаб карты
                 }
-                if(event.deltaY===-125) {
-                    this.zoom-=1
+                if(event.deltaY===-125) {   // при прокрутке колёсика мыши вверх
+                    this.zoom--    // увеличивается масштаб карты
                 }
             }
+        },
+
+        createInCanavas() { // функция помогающая работать с Canvas
+            var myCanvas = document.querySelector(".map")    // объект Canvas
+            var myCtx = myCanvas.getContext("2d")   // контекст myCanvas (2d-объекты)
+            myCtx.fillStyle = "white" // цвет заливки прямоугольника
+            myCtx.fillRect(0, 0, 200, 50) // обычный прямоугольник
+            myCtx.fillStyle = "blue" // цвет заливки прямоугольника
+            myCtx.fillRect(0, 50, 200, 50) // обычный прямоугольник
+            myCtx.fillStyle = "red" // цвет заливки прямоугольника
+            myCtx.fillRect(0, 100, 200, 50) // обычный прямоугольник
+
+            myCtx.clearRect(0,0, 400, 200)  // стирает всё в заданном прямоугольнике
+
+            myCtx.strokeStyle = "green" // цвет прямоугольника
+            myCtx.lineWidth = "10"  // ширина обводки
+            myCtx.rect(50, 10, 100, 100) // область прямоугольника
+            myCtx.stroke()  // рисуем область прямоугольника
+            myCtx.fill()    // заливка последним цветом
         }
+
     },
     computed: { // компьютид-функции, которые используются для оптимизации. Должны что-то возвращать
         doubleCountComputed() { // компьютид-функция возвращающая удвоенное кол-во записей
