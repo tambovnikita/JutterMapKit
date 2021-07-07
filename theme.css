@@ -13,10 +13,16 @@ h1 {
 }
 
 h2 {
-    margin: 10px 0;  /*убираем внешний отступ у текста*/
+    margin: 10px 10px;  /*убираем внешний отступ у текста*/
     color: #9eceea; /*цвет текста*/
     font-family: Century Gothic;    /*шрифт текста*/
     font-style: italic; /*стиль текста (наклонный)*/
+}
+
+button:active { /*оформление кнопок при нажатии*/
+    background-color: #1c2842;
+    border-color: #1c2842;
+    color: #eee;
 }
 
 .container {    /*основной контейнер*/
@@ -57,22 +63,47 @@ h2 {
     background: url("./img/btn-house-create.svg");    /*фон кнопки*/
 }
 
+.btnCreate.active {    /*кнопки создания какого объекта*/
+    margin: 5px 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px; /*скругление углов*/
+    background: url("./img/btn-house-create.svg");    /*фон кнопки*/
+    background-color: #1c2842;
+    border-color: #1c2842;
+}
+
+#btnHouse:hover {
+    content: attr(title);
+}
+
+#btnRoad:hover {
+    content: attr(title);
+}
+
+#btnGrass:hover {
+    content: attr(title);
+}
+
 .mapBorders {  /*окошко для карты*/
     margin: 0;   /*внешний отступ (центрируем)*/
-    display: block;  /*представление содержимого*/
+    display: flex;  /*представление содержимого*/
     height: 550px;  /*высота*/
     width: 100%;    /*ширина*/
     border-radius: 10px; /*скругление углов*/
-    background: url("./img/pattern.png"); /*фон поля-редактирования*/
+    background-color: white;    /*цвет фона*/
     align-items: center;    /*выравнивание по горизонтали*/
-    justify-items: center;  /*выравнивание объектов по центру*/
+    justify-content: center;  /*выравнивание объектов по центру*/
 
     overflow: scroll;   /*появляются скроллы, когда карта выходит за границы окошка для карты*/
 }
 
 .map {  /*область с самой картой (рабочая область)*/
-    width: 400px;
-    height: 200px;
     border: 3px solid black;
-    margin: 40px;
+    background: white;
+}
+
+.map.active {  /*область с самой картой (рабочая область)*/
+    border: 3px solid black;
+    background: url('./img/pattern.png');
 }

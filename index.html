@@ -23,11 +23,14 @@
         <div class="btnsCreate">    <!--область с кнопками-редактирования-->
             <hr>
             <!--при клике на кнопку начинается работа с Canvas-->
-            <button class="btnCreate" v-on:click="createInCanavas"></button>
+            <button class="btnCreate" id="btnHouse" title="Создать house"
+                    v-on:click="creationModes"></button>
             <hr>
-            <button class="btnCreate"></button>
+            <button class="btnCreate" id="btnRoad" title="Создать road"
+                    v-on:click="creationModes"></button>
             <hr>
-            <button class="btnCreate"></button>
+            <button class="btnCreate" id="btnGrass"   title="Создать grass"
+                    v-on:click="creationModes"></button>
             <hr>
             <button class="btnCreate"></button>
             <hr>
@@ -51,12 +54,18 @@
 <!--                     }">-->
 <!--            </div>-->
             <!--Работаем с Canvas (рисование)-->
-            <canvas class="map" width="400" height="200"></canvas>  <!--width и height-разрешение (может быть 10000 на 200000)-->
-            <input type="color" id="color"> <!--ввод цвета-->
+            <!--width и height-разрешение (может быть 10000 на 200000)-->
+            <canvas v-bind:class="classMap"
+                    v-bind:style="{width: myZoomWidth+'px', height: myZoomHeight+'px', transform: 'scale('+transformMap+')'}"
+                    v-on:mousedown="createInCanvas">
+            </canvas>
+<!--            <input type="color" id="color"> &lt;!&ndash;ввод цвета&ndash;&gt;-->
         </div>
     </div>
 
-    <h2>Масштаб: {{ zoom }}</h2>
+    <h2>Создаётся объект: {{ creationMode }} &nbsp; &nbsp; Масштаб: {{ myZoomWidth}}</h2>
+
+    <button class="btnNewMap" name="btnNewMap" v-on:click="newMap"> Новый проект </button>
 
 </div>
 
