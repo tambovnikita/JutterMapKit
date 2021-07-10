@@ -16,22 +16,25 @@
 <!--задаём общую область-->    <!--id="app" создаёт привязку div к Vue-->
 <div class="container" id="app" v-cloak>    <!--(v-cloak) позволяет избежать отображения на экране промежуточных состояний-->
     <div class="title"> <!--область с названием-->
-        <h1>{{ title }}</h1>
+        <h1>{{ title }}</h1>    <!--выводим название-->
     </div>
     <br/>   <!--отступ-->
     <div class="MapAndBtnsCreate"> <!--область, в которой будут находиться кнопки построения и карта-->
         <div class="btnsCreate">    <!--область с кнопками-редактирования-->
             <hr>
-            <!--при клике на кнопку начинается работа с Canvas-->
+            <!--при клике на кнопку вызывается функция creationModes, которая присваивает переменной creationMode значение "house" -->
             <button class="btnCreate" id="btnHouse" title="Создать house"
                     v-on:click="creationModes"></button>
             <hr>
+            <!--при клике на кнопку вызывается функция creationModes, которая присваивает переменной creationMode значение "road" -->
             <button class="btnCreate" id="btnRoad" title="Создать road"
                     v-on:click="creationModes"></button>
             <hr>
+            <!--при клике на кнопку вызывается функция creationModes, которая присваивает переменной creationMode значение "grass" -->
             <button class="btnCreate" id="btnGrass"   title="Создать grass"
                     v-on:click="creationModes"></button>
             <hr>
+            <!--эта кнопка пока не используется-->
             <button class="btnCreate"></button>
             <hr>
         </div>
@@ -46,25 +49,22 @@
              v-on:mousemove="mouseInOutMap=true"
              v-on:wheel="scrollInMap">
 
-<!--            <div class="map" >   &lt;!&ndash;область с самой картой (рабочая область)&ndash;&gt;-->
-<!--                <img class="map" src="img/exampleMap.png" alt="Карта загружается..."-->
-<!--                     v-bind:style="{-->
-<!--                        width: zoom+'%',-->
-<!--                        height: zoom+'%'-->
-<!--                     }">-->
-<!--            </div>-->
-            <!--Работаем с Canvas (рисование)-->
-            <!--width и height-разрешение (может быть 10000 на 200000)-->
+            <!--Работаем с Canvas (рисование). class меняется при нажатии кнопки "новый проект"-->
+            <!--width и height - это разрешение (может быть 10000 на 200000), transform - это увеличение-->
+            <!--style динамический (нужен для zoom)-->
+            <!--v-on:mousedown (при нажатии клавиши мыши) выполняется функция createInCanvas, которая рисует выбранный объект-->
             <canvas v-bind:class="classMap"
                     v-bind:style="{width: myZoomWidth+'px', height: myZoomHeight+'px', transform: 'scale('+transformMap+')'}"
                     v-on:mousedown="createInCanvas">
             </canvas>
-<!--            <input type="color" id="color"> &lt;!&ndash;ввод цвета&ndash;&gt;-->
+<!--            <input type="color" id="color"> &lt;!&ndash;ввод цвета&ndash;&gt;-->    <!--выбор цвета-->
         </div>
     </div>
 
+    <!--обычные заголовки-->
     <h2>Создаётся объект: {{ creationMode }} &nbsp; &nbsp; Масштаб: {{ myZoomWidth}}</h2>
 
+    <!--кнопка, при нажатии которой изменяется class canvas и создаётся объект Canvas-->
     <button class="btnNewMap" name="btnNewMap" v-on:click="newMap"> Новый проект </button>
 
 </div>

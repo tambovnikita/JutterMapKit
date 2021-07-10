@@ -12,7 +12,7 @@ const App = {   // содержимое приложения
             countPoints: 0, // кол-во точек
             myCanvas: null, // объект Canvas
             myCtx: null, // контекст myCanvas (2d-объекты)
-            myJson: {
+            myJson: {   // пример рабочего JSON
                 "nameWorkspace": "myExample",
                 "idWorkspace": "1",
                 "houses": [{
@@ -98,77 +98,85 @@ const App = {   // содержимое приложения
             }
         },
 
-        creationModes(event) {    // режимы создания (house, road, grass...)
-            switch (event.target.id) {
-                case 'btnHouse':
+        creationModes(event) {    // режимы создания (house, road, grass...) и активации кнопок (css)
+            switch (event.target.id) {  // рассматриваем несколько вариантов (определяем какая кнопка была нажата)
+                case 'btnHouse':    // если была нажата кнопка для создания house
+                    // и если режим создания ещё не задан или равен 'road' или равен 'grass', то
                     if (this.creationMode === null || this.creationMode === 'road' || this.creationMode === 'grass') {
-                        if (this.creationMode === 'road') {
+                        if (this.creationMode === 'road') { // если был режим создания 'road', то
+                            // убираем активное состояние кнопки 'road' (css)
                             document.getElementById("btnRoad").classList.remove("active")
                         }
-                        if (this.creationMode === 'grass') {
+                        if (this.creationMode === 'grass') {    // если был режим создания 'grass', то
+                            // убираем активное состояние кнопки 'grass' (css)
                             document.getElementById("btnGrass").classList.remove("active")
                         }
-                        this.creationMode = 'house'
-                        event.target.classList.add("active")
+                        this.creationMode = 'house' // режим создания теперь будет 'house'
+                        event.target.classList.add("active")    // и у кнопки 'house' будет активированный режим
                     }
-                    else {
-                        this.creationMode = null
-                        event.target.classList.remove("active")
+                    else {  // если кнопка 'house' уже была активирована, то
+                        this.creationMode = null    // онулируем режим создания
+                        event.target.classList.remove("active") // и убираем активированное состояние кнопки 'house' (css)
                     }
-                    break
+                    break   // завершаем case
 
-                case 'btnRoad':
+                case 'btnRoad': // если была нажата кнопка для создания road
+                    // и если режим создания ещё не задан или равен 'house' или равен 'grass', то
                     if (this.creationMode === null || this.creationMode === 'house' || this.creationMode === 'grass') {
-                        if (this.creationMode === 'house') {
+                        if (this.creationMode === 'house') {    // если был режим создания 'house', то
+                            // убираем активное состояние кнопки 'house' (css)
                             document.getElementById("btnHouse").classList.remove("active")
                         }
-                        if (this.creationMode === 'grass') {
+                        if (this.creationMode === 'grass') {    // если был режим создания 'grass', то
+                            // убираем активное состояние кнопки 'grass' (css)
                             document.getElementById("btnGrass").classList.remove("active")
                         }
-                        this.creationMode = 'road'
-                        event.target.classList.add("active")
+                        this.creationMode = 'road'  // режим создания теперь будет 'road'
+                        event.target.classList.add("active")    // и у кнопки 'road' будет активированный режим
 
                     }
-                    else {
-                        this.creationMode = null
-                        event.target.classList.remove("active")
+                    else {  // если кнопка 'road' уже была активирована, то
+                        this.creationMode = null    // онулируем режим создания
+                        event.target.classList.remove("active") // и убираем активированное состояние кнопки 'road' (css)
                     }
-                    break
+                    break   // завершаем case
 
-                case 'btnGrass':
+                case 'btnGrass':    // если была нажата кнопка для создания grass
+                    // и если режим создания ещё не задан или равен 'house' или равен 'road', то
                     if (this.creationMode === null || this.creationMode === 'house' || this.creationMode === 'road') {
-                        if (this.creationMode === 'house') {
+                        if (this.creationMode === 'house') {    // если был режим создания 'house', то
+                            // убираем активное состояние кнопки 'house' (css)
                             document.getElementById("btnHouse").classList.remove("active")
                         }
-                        if (this.creationMode === 'road') {
+                        if (this.creationMode === 'road') { // если был режим создания 'road', то
+                            // убираем активное состояние кнопки 'road' (css)
                             document.getElementById("btnRoad").classList.remove("active")
                         }
-                        this.creationMode = 'grass'
-                        event.target.classList.add("active")
+                        this.creationMode = 'grass' // режим создания теперь будет 'grass'
+                        event.target.classList.add("active")    // и у кнопки 'grass' будет активированный режим
 
                     }
-                    else {
-                        this.creationMode = null
-                        event.target.classList.remove("active")
+                    else {  // если кнопка 'grass' уже была активирована, то
+                        this.creationMode = null    // онулируем режим создания
+                        event.target.classList.remove("active") // и убираем активированное состояние кнопки 'grass' (css)
                     }
-                    break
+                    break   // завершаем case
             }
-        }
-
-        ,
+        },
 
         createInCanvas(moveEvent) { // редактор карты на Canvas
 
-            if (this.creationMode === 'house') {
+            if (this.creationMode === 'house') {    // если режим создания 'house'
 
                 this.myCtx.strokeStyle = "black" // цвет линий
                 this.myCtx.fillStyle = "black" // цвет заливки точек
                 this.myCtx.lineWidth = "1"   // ширина линий
 
-                if (this.listPoints.length !== 0) {
+                if (this.listPoints.length !== 0) { // если была создана хоть одна координата дома
 
-                    if (this.listPoints.length > 2) {
-                        if (Math.abs(this.listPoints[0][0]-moveEvent.offsetX) < 8 && Math.abs(this.listPoints[0][1]-moveEvent.offsetY) < 5) {
+                    if (this.listPoints.length > 2) {   // если было создано больше двух координат здания
+                        // если был клик мыши в радиусе 5 пикселей от самой первой координаты здания, то
+                        if (Math.abs(this.listPoints[0][0]-moveEvent.offsetX) < 5 && Math.abs(this.listPoints[0][1]-moveEvent.offsetY) < 5) {
                             this.myCtx.lineTo(this.listPoints[0][0], this.listPoints[0][1])  // проводим линию в первую точку
                             this.myCtx.stroke()  // отрисовываем линию
                             this.myCtx.closePath()   // дорисовывает фигуру (соединяет концы)
@@ -179,20 +187,20 @@ const App = {   // содержимое приложения
                             this.myCtx.fillStyle = "black" // цвет заливки точек
                             this.myCtx.lineWidth = "0"   // ширина линий
                             this.myCtx.globalAlpha = 0.2;  // устанавливаем значение прозрачности
-                            this.myCtx.moveTo(this.listPoints[0][0], this.listPoints[0][1])
-                            for (var i = 0; i < (this.listPoints.length-1); i++) {
-                                this.myCtx.lineTo(this.listPoints[i+1][0], this.listPoints[i+1][1])
-                                if ((this.listPoints.length-1) === i+1) {
-                                    this.myCtx.lineTo(this.listPoints[0][0], this.listPoints[0][1])
+                            this.myCtx.moveTo(this.listPoints[0][0], this.listPoints[0][1]) // курсор в первой координате
+                            for (var i = 0; i < (this.listPoints.length-1); i++) {  // проходимся по списку с координатами
+                                this.myCtx.lineTo(this.listPoints[i+1][0], this.listPoints[i+1][1]) // проводим линии
+                                if ((this.listPoints.length-1) === i+1) {   // условие для последней линии
+                                    this.myCtx.lineTo(this.listPoints[0][0], this.listPoints[0][1]) // проводим последнюю линию
                                     this.myCtx.closePath()   // дорисовывает фигуру (соединяет концы)
-                                    this.myCtx.stroke()  // отрисовываем треугольник
-                                    this.myCtx.fill()    // заливка треугольника последним цветом
+                                    this.myCtx.stroke()  // отрисовываем многоугольник (здание)
+                                    this.myCtx.fill()    // заливка многоугольника (здания) последним цветом
                                 }
                             }
                             console.log("Здание готово")
                             console.log(this.listPoints)
-                            this.myJson.houses[0].coordinatesHouse.push(this.listPoints)
-                            console.log(this.myJson)
+                            this.myJson.houses[0].coordinatesHouse.push(this.listPoints)    // заносим координаты здания в JSON
+                            console.log(this.myJson)    // смотрим на JSON
                             //listPoints = []
                             //this.countPoints = 0
                         }
@@ -327,21 +335,7 @@ const App = {   // содержимое приложения
 
         */
 
-    },
-    computed: { // компьютид-функции, которые используются для оптимизации. Должны что-то возвращать
-        doubleCountComputed() { // компьютид-функция возвращающая удвоенное кол-во записей
-            return this.notes.length * 2
-        }
-    },
-    watch: {    // механизм позволяющий следить за любыми изменениями переменных в data()
-        inputValue(value) {  // название метода совпадает с названием переменной, а value - последнее (новое) значение переменной
-            if (value.length > 10) {    // Например, если новое значение переменной длиннее 10 символов, то
-                this.inputValue = ''    // обнуляем содержимое строки ввода
-            }
-        }
     }
-
-
 
 }
 
