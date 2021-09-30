@@ -42,36 +42,51 @@
         <!--(v-on:mouseenter) когда мышь входит в области окошка карты-->
         <!--(v-on:mouseout) когда мышь выходит в области окошка карты-->
         <!--(v-on:mousemove) когда мышь двигается в области окошка карты-->
-        <!--(v-on:wheel) когда крутится колёсико мыши в области окошка карты-->
+        <!--(v-on:wheel.keyup.ctrl) когда крутится колёсико мыши и зажата клавиша Ctrl в области окошка карты-->
         <div class="mapBorders"
              v-on:mouseenter="mouseInOutMap=true"
              v-on:mouseout="mouseInOutMap=false"
              v-on:mousemove="mouseInOutMap=true"
-             v-on:wheel="scrollInMap">
+             v-on:wheel.keyup.alt="zoomInMap"
+             v-on:wheel="vertScrollInMap"
+             v-on:wheel.keyup.shift="horizScrollInMap">
 
             <!--Работаем с Canvas (рисование). class меняется при нажатии кнопки "новый проект"-->
             <!--width и height - это разрешение (может быть 10000 на 200000), transform - это увеличение-->
             <!--style динамический (нужен для zoom)-->
-            <!--v-on:mousedown (при нажатии клавиши мыши) выполняется функция createInCanvas, которая рисует выбранный объект-->
+            <!--v-on:mousedown (при нажатии клавиши мыши) выполняется функция createInCanvas, которая рисует выбранный объект
+                или перемещает карту-->
+            <!--v-on:mouseup (при поднятии клавиши мыши) перемещение карты заканчивается-->
             <canvas v-bind:class="classMap"
-                    v-bind:style="{width: myZoomWidth+'px', height: myZoomHeight+'px', transform: 'scale('+transformMap+')'}"
-                    v-on:mousedown="createInCanvas">
+                    v-bind:style="{
+                        width: myZoomWidth+'px',
+                        height: myZoomHeight+'px',
+                        transform: 'scale('+transformMap+')',
+                        bottom: b+'px',
+                        right: r+'px'}"
+                    v-on:mousedown="createInCanvas($event)">
             </canvas>
 <!--            <input type="color" id="color"> &lt;!&ndash;ввод цвета&ndash;&gt;-->    <!--выбор цвета-->
         </div>
     </div>
 
-    <!--обычные заголовки-->
-    <h2>Создаётся объект: {{ creationMode }} &nbsp; &nbsp; Масштаб: {{ myZoomWidth}}</h2>
+    <div class="niz">
+        <!--кнопка, при нажатии которой изменяется class canvas и создаётся объект Canvas-->
+        <button class="btnNewMap" name="btnNewMap" v-on:click="newMap"> Новый проект </button>
 
-    <!--кнопка, при нажатии которой изменяется class canvas и создаётся объект Canvas-->
-    <button class="btnNewMap" name="btnNewMap" v-on:click="newMap"> Новый проект </button>
+        <!--обычные заголовки-->
+        <h2>Создаётся объект: {{ creationMode }} &nbsp; &nbsp; Масштаб: {{Math.round(transformMap*100)}}</h2>
+    </div>
+
 
 </div>
 
+<!--подключаем Vue-->
+<script src="https://unpkg.com/vue@next"></script>
 
-<script src="https://unpkg.com/vue@next"></script>  <!--подключаем Vue-->
-<script src="app.js"></script>  <!--подключаем js-файл к html-->
+<!--подключаем js-файл к html-->
+<script src="app.js"></script>
+
 </body>
 
 </html>

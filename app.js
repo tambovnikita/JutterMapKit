@@ -5,49 +5,21 @@ const App = {   // содержимое приложения
             mouseInOutMap: false,   // если курсор в области карты, то mouseInOutMap будет true, иначе false
             myZoomWidth: 10000,  // ширина области карты
             myZoomHeight: 10000,  // высота области карты
-            transformMap: 1,
+            b: 5000,
+            r: 5000,
+            transformMap: 1,    // коэффициент масштаба (изначально 100%)
+            moveMap: null, // двигаем карту или нет (нужно при движении карты мышью)
             creationMode: null, // режим создания (house, road, grass...)
             classMap: 'map',    // режим карты (map или map.active)
             listPoints: [], // массив с координатами [X, Y] точек
             countPoints: 0, // кол-во точек
             myCanvas: null, // объект Canvas
             myCtx: null, // контекст myCanvas (2d-объекты)
-            myJson: {   // пример рабочего JSON
-                "nameWorkspace": "myExample",
-                "idWorkspace": "1",
-                "houses": [{
-                    "nameHouse": null,
-                    "idHouse": null,
-                    "areaHouse": {
-                        "xArea": null,
-                        "yArea": null,
-                        "widthArea": null,
-                        "heightArea": null
-                    },
-                    "coordinatesHouse": []
-                }],
-                "roads": [{
-                    "nameRoad": null,
-                    "idRoad": null,
-                    "areaRoad": {
-                        "xArea": null,
-                        "yArea": null,
-                        "widthArea": null,
-                        "heightArea": null
-                    },
-                    "coordinatesRoad": []
-                }],
-                "grasses": [{
-                    "nameGrass": null,
-                    "idGrass": null,
-                    "areaGrass": {
-                        "xArea": null,
-                        "yArea": null,
-                        "widthArea": null,
-                        "heightArea": null
-                    },
-                    "coordinatesGrass": []
-                }]
+            // пример рабочего JSON
+            myJson: {
+                "id": "123e4567-e89b-12d3-a456-426614174000",
+                "name": "Схема кампуса МАИ",
+                "objects": []
             }
     }},
     methods: {  // функции
@@ -60,41 +32,28 @@ const App = {   // содержимое приложения
             this.myCtx.canvas.height = this.myZoomHeight   // высота расширения карты = высоте области карты
         },
 
-        scrollInMap(event) { // функция выполняющаяся при кручении колёсика мыши
+        zoomInMap(event) { // функция выполняющаяся при кручении колёсика мыши
 
             if (this.mouseInOutMap) {   // если курсор мыши находися в области карты, то
-                if(event.deltaY===125) {    // при прокрутке колёсика мыши вниз
-                    if (this.transformMap <= 2) {this.transformMap+=0.05}
-                    //this.myZoomWidth = Math.round(this.myZoomWidth * 1.1)   // увеличивается ширина карты
-                    //this.myZoomHeight = Math.round(this.myZoomHeight * 1.1)  // увеличивается высота карты
-                    //this.myCtx.canvas.width = Math.round(this.myCtx.canvas.width * 1.1)    // увеличивается ширина расширения карты
-                    //this.myCtx.canvas.height = Math.round(this.myCtx.canvas.height * 1.1)    // увеличивается высота расширения карты
-                }
-                if(event.deltaY===-125) {   // при прокрутке колёсика мыши вверх
-                    if (this.transformMap >= 0.05) {this.transformMap-=0.05}
-                    //this.myZoomWidth = Math.round(this.myZoomWidth / 1.1)   // уменьшается ширина карты
-                    //this.myZoomHeight = Math.round(this.myZoomHeight / 1.1)  // уменьшается высота карты
-                    //this.myCtx.canvas.width = Math.round(this.myCtx.canvas.width / 1.1)    // уменьшается ширина расширения карты
-                    //this.myCtx.canvas.height = Math.round(this.myCtx.canvas.height / 1.1)    // уменьшается высота расширения карты
-                }
+                
+                this.b = Number(document.getElementsByClassName('map')[0].style.bottom.slice(0, -2))
+                this.r = Number(document.getElementsByClassName('map')[0].style.right.slice(0, -2))
+                console.log(this.b, this.r)
 
-                // Заливка здания
-                this.myCtx.beginPath()   // новая фигура с новыми настройками
-                this.myCtx.strokeStyle = "black" // цвет линий
-                this.myCtx.fillStyle = "black" // цвет заливки точек
-                this.myCtx.lineWidth = "2"   // ширина линий
-                this.myCtx.globalAlpha = 1;  // устанавливаем значение прозрачности
-                this.myCtx.moveTo(this.listPoints[0][0], this.listPoints[0][1])
-                for (var i = 0; i < (this.listPoints.length-1); i++) {
-                    this.myCtx.lineTo(this.listPoints[i+1][0], this.listPoints[i+1][1])
-                    if ((this.listPoints.length-1) === i+1) {
-                        this.myCtx.lineTo(this.listPoints[0][0], this.listPoints[0][1])
-                        this.myCtx.globalAlpha = 0.2;  // устанавливаем значение прозрачности
-                        this.myCtx.closePath()   // дорисовывает фигуру (соединяет концы)
-                        this.myCtx.stroke()  // отрисовываем треугольник
-                        this.myCtx.fill()    // заливка треугольника последним цветом
+                if(event.deltaY===125) {    // при прокрутке колёсика мыши вниз
+                    if (this.transformMap <= 2) {
+                        this.transformMap+=0.05
+                        this.b += 15*Math.round(1/this.transformMap)
+                        this.r += 15*Math.round(1/this.transformMap)
                     }
                 }
+                if(event.deltaY===-125) {   // при прокрутке колёсика мыши вверх
+                    if (this.transformMap >= 0.05) {
+                        this.transformMap-=0.05
+                        this.b -= 15*Math.round(1/this.transformMap)
+                        this.r -= 15*Math.round(1/this.transformMap)
+                    }
+                } 
             }
         },
 
@@ -163,21 +122,52 @@ const App = {   // содержимое приложения
                     break   // завершаем case
             }
         },
+        
+        vertScrollInMap(event) { // перемещение карты по ветикали (с помощью скролла мыши)
+            
+            if (this.mouseInOutMap && !event.shiftKey) {   // если курсор мыши находися в области карты и не зажата клавиша Shift, то
 
-        createInCanvas(moveEvent) { // редактор карты на Canvas
+                var countBottom = Number(document.getElementsByClassName('map')[0].style.bottom.slice(0, -2))
+
+                if(event.deltaY===125) {    // при прокрутке колёсика мыши вниз
+                    document.getElementsByClassName('map')[0].style.bottom = "{b}px".replace('{b}', (countBottom - 8))
+                }
+                if(event.deltaY===-125) {   // при прокрутке колёсика мыши вверх
+                    document.getElementsByClassName('map')[0].style.bottom = "{b}px".replace('{b}', (countBottom + 8))
+                }
+            }
+        },
+
+        horizScrollInMap(event) { // перемещение карты по горизонтали (с помощью скролла мыши и зажатой клавиши Shift)
+            
+            if (this.mouseInOutMap && event.shiftKey) {   // если курсор мыши находися в области карты и зажата клавиша Shift, то
+
+                var countRight = Number(document.getElementsByClassName('map')[0].style.right.slice(0, -2))
+
+                if(event.deltaY===125) {    // при прокрутке колёсика мыши вниз
+                    document.getElementsByClassName('map')[0].style.right = "{b}px".replace('{b}', (countRight - 8))
+                }
+                if(event.deltaY===-125) {   // при прокрутке колёсика мыши вверх
+                    document.getElementsByClassName('map')[0].style.right = "{b}px".replace('{b}', (countRight + 8))
+                }
+            }
+        },
+
+        createInCanvas(mainEvent) { // создание карты на Canvas
 
             if (this.creationMode === 'house') {    // если режим создания 'house'
 
                 this.myCtx.strokeStyle = "black" // цвет линий
                 this.myCtx.fillStyle = "black" // цвет заливки точек
                 this.myCtx.lineWidth = "1"   // ширина линий
+                this.myCtx.globalAlpha = 1;  // устанавливаем значение прозрачности
 
                 if (this.listPoints.length !== 0) { // если была создана хоть одна координата дома
 
-                    if (this.listPoints.length > 2) {   // если было создано больше двух координат здания
-                        // если был клик мыши в радиусе 5 пикселей от самой первой координаты здания, то
-                        if (Math.abs(this.listPoints[0][0]-moveEvent.offsetX) < 5 && Math.abs(this.listPoints[0][1]-moveEvent.offsetY) < 5) {
-                            this.myCtx.lineTo(this.listPoints[0][0], this.listPoints[0][1])  // проводим линию в первую точку
+                    // если был клик мыши в радиусе 5 пикселей от самой первой координаты здания, то
+                    if (Math.abs(this.listPoints[0]["lat"]-mainEvent.offsetX) < 5 && Math.abs(this.listPoints[0]["lon"]-mainEvent.offsetY) < 5) {
+                        if (this.listPoints.length > 2) {   // если было создано больше двух координат здания
+                            this.myCtx.lineTo(this.listPoints[0]["lat"], this.listPoints[0]["lon"])  // проводим линию в первую точку
                             this.myCtx.stroke()  // отрисовываем линию
                             this.myCtx.closePath()   // дорисовывает фигуру (соединяет концы)
 
@@ -187,45 +177,63 @@ const App = {   // содержимое приложения
                             this.myCtx.fillStyle = "black" // цвет заливки точек
                             this.myCtx.lineWidth = "0"   // ширина линий
                             this.myCtx.globalAlpha = 0.2;  // устанавливаем значение прозрачности
-                            this.myCtx.moveTo(this.listPoints[0][0], this.listPoints[0][1]) // курсор в первой координате
+                            this.myCtx.moveTo(this.listPoints[0]["lat"], this.listPoints[0]["lon"]) // курсор в первой координате
                             for (var i = 0; i < (this.listPoints.length-1); i++) {  // проходимся по списку с координатами
-                                this.myCtx.lineTo(this.listPoints[i+1][0], this.listPoints[i+1][1]) // проводим линии
+                                this.myCtx.lineTo(this.listPoints[i+1]["lat"], this.listPoints[i+1]["lon"]) // проводим линии
                                 if ((this.listPoints.length-1) === i+1) {   // условие для последней линии
-                                    this.myCtx.lineTo(this.listPoints[0][0], this.listPoints[0][1]) // проводим последнюю линию
+                                    this.myCtx.lineTo(this.listPoints[0]["lat"], this.listPoints[0]["lon"]) // проводим последнюю линию
                                     this.myCtx.closePath()   // дорисовывает фигуру (соединяет концы)
                                     this.myCtx.stroke()  // отрисовываем многоугольник (здание)
                                     this.myCtx.fill()    // заливка многоугольника (здания) последним цветом
                                 }
                             }
+
                             console.log("Здание готово")
                             console.log(this.listPoints)
-                            this.myJson.houses[0].coordinatesHouse.push(this.listPoints)    // заносим координаты здания в JSON
+
+                            // заносим координаты здания в JSON
+                            this.myJson.objects.push(
+                            {
+                                "id": this.countPoints,
+                                "type": "building",
+                                "address": "Ленинградский проспект 24к9",
+                                "name": "корпус 1",
+                                "buildingType": "cumpus",
+                                "doors": [],
+                                "points": this.listPoints,
+                                "floors": [],
+                                "stairs": []
+                            }
+                            )
                             console.log(this.myJson)    // смотрим на JSON
-                            //listPoints = []
-                            //this.countPoints = 0
+                            
+                            // После сохранения здания сбрасываем координаты и кол-во точек
+                            this.listPoints = []
+                            this.countPoints = 0
                         }
                     }
                     if (this.listPoints.length >= 1) {
-                        this.listPoints.push([moveEvent.offsetX, moveEvent.offsetY]) // текущие координаты X и Y курсора заносим в массив
+                        
+                        this.listPoints.push({"lat": mainEvent.offsetX, "lon":mainEvent.offsetY}) // текущие координаты X и Y курсора заносим в массив
                         this.countPoints++   // увеличиваем кол-во точек
 
                         this.myCtx.beginPath()   // новая фигура с новыми настройками
                         // (X-центр, Y-цента, радиус, начальный угол, конечный угол, true - против часовой стрелки, false - по часовой стрелке)
-                        this.myCtx.arc(this.listPoints[this.countPoints-1][0], this.listPoints[this.countPoints-1][1], 3, 0, 2 * Math.PI, false)
+                        this.myCtx.arc(this.listPoints[this.countPoints-1]["lat"], this.listPoints[this.countPoints-1]["lon"], 3, 0, 2 * Math.PI, false)
                         this.myCtx.fill()    // заливка круга последним цветом
                         if (this.countPoints-2 >= 0) {
-                            this.myCtx.moveTo(this.listPoints[this.countPoints-2][0], this.listPoints[this.countPoints-2][1])    // начало в предыдущей точке
+                            this.myCtx.moveTo(this.listPoints[this.countPoints-2]["lat"], this.listPoints[this.countPoints-2]["lon"])    // начало в предыдущей точке
                         }
-                        this.myCtx.lineTo(this.listPoints[this.countPoints-1][0], this.listPoints[this.countPoints-1][1])  // проводим линию, соединяющую две точки
+                        this.myCtx.lineTo(this.listPoints[this.countPoints-1]["lat"], this.listPoints[this.countPoints-1]["lon"])  // проводим линию, соединяющую две точки
                         this.myCtx.stroke()  // отрисовываем точку и линию
                     }
                 }
                 else {
-                    this.listPoints.push([moveEvent.offsetX, moveEvent.offsetY]) // текущие координаты X и Y курсора заносим в массив
+                    this.listPoints.push({"lat": mainEvent.offsetX, "lon":mainEvent.offsetY}) // текущие координаты X и Y курсора заносим в массив
                     this.countPoints++   // увеличиваем кол-во точек
 
                     this.myCtx.beginPath()   // новая фигура с новыми настройками
-                    this.myCtx.arc(this.listPoints[this.countPoints-1][0], this.listPoints[this.countPoints-1][1], 3, 0, 2 * Math.PI, false)
+                    this.myCtx.arc(this.listPoints[this.countPoints-1]["lat"], this.listPoints[this.countPoints-1]["lon"], 3, 0, 2 * Math.PI, false)
                     this.myCtx.fill()    // заливка круга последним цветом
                     this.myCtx.stroke()  // отрисовываем точку и линию
                 }
@@ -336,6 +344,14 @@ const App = {   // содержимое приложения
         */
 
     }
+
+    /*
+    watch: {    // механизм позволяющий следить за любыми изменениями переменных в data()
+        transformMap(value) {  // название метода совпадает с названием переменной, а value - последнее (новое) значение переменной
+            
+        }
+    }
+    */
 
 }
 
